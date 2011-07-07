@@ -8,6 +8,10 @@ class ContactController < ApplicationController
   
   before_filter :disable_action_for_api
   
+  if ENABLE_SSL && Rails.env.production?
+    ssl_required :all
+  end
+  
   # GET /contact
   def index
     respond_to do |format|

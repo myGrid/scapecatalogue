@@ -20,16 +20,16 @@ class ApplicationController < ActionController::Base
   # Allow for SSL support
   include SslRequirement
   if ENABLE_SSL && Rails.env.production?
-    ssl_required :all
-    ROUTES_PROTOCOL = 'https'
+    ssl_allowed :all
+    DEFAULT_PROTOCOL = 'https'
   else
-    ROUTES_PROTOCOL = 'http'
+    DEFAULT_PROTOCOL = 'http'
   end
   
-  def routes_protocol
-    ROUTES_PROTOCOL
+  def default_protocol
+    DEFAULT_PROTOCOL
   end
-  helper_method :routes_protocol
+  helper_method :default_protocol
   
   # ============================================
 
@@ -220,23 +220,6 @@ class ApplicationController < ActionController::Base
     request.host_with_port
   end
 
-  
-  # 
-  def monitoring_history_limit
-    default_recommendation = 5
-    
-    biocatalogue_max_limit = 15
-    biocatalogue_min_limit = 0
-    
-    return default_recommendation if MONITORING_HISTORY_LIMIT == -1
-    
-    return biocatalogue_min_limit if MONITORING_HISTORY_LIMIT <= biocatalogue_min_limit
-    return biocatalogue_max_limit if MONITORING_HISTORY_LIMIT >= biocatalogue_max_limit
-    
-    return MONITORING_HISTORY_LIMIT
-  end
-  helper_method :monitoring_history_limit
-  
   protected
   
   def debug_messages
