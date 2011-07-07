@@ -68,28 +68,31 @@
 					<%= service_test_status_symbol(service_test) -%>
 				</div>
 	
-				<p>
-					<b>Recent History</b>
-				</p>
+				<% if monitoring_history_limit > 0 %>
+					<p>
+						<b>Recent History</b>
+					</p>
+					<div class="box_indented_with_bar">
+						<ul>
+							<% unless (test_hist = service_test.recent_test_results(monitoring_history_limit)).blank? -%>
+								<% test_hist.each do |hist| %>
+								<li class="container_middled">
+									<%= test_result_status_symbol(hist) %> 
+									<span><%= distance_of_time_in_words_to_now(hist.created_at) -%> ago</span>
+								</li>
+							<% end %>
+							<% else %>
+								<li class="none_text">No previous checks</li>
+							<% end %>
+						</ul>
+					</div>
+				<% end %>
 						
-				<div class="box_indented_with_bar">
-					<ul>
-						<% unless (test_hist = service_test.recent_test_results).blank? -%>
-							<% test_hist.each do |hist| %>
-							<li class="container_middled">
-								<%= test_result_status_symbol(hist) %> 
-								<span><%= distance_of_time_in_words_to_now(hist.created_at) -%> ago</span>
-							</li>
-						<% end %>
-						<% else %>
-							<li class="none_text">No previous checks</li>
-						<% end %>
-					</ul>
-				</div>
-				
-				<%unless service_test.latest_status.label.downcase == 'unchecked' %>
-					<div id="line_chart" style="margin-top: 2em; border-top: 2px solid #CCF; padding-top: 1em;" ></div>
-				<%end%>
+				<% if SHOW_MONITORING_GRAPH %>			
+					<%unless service_test.latest_status.label.downcase == 'unchecked' %>
+						<div id="line_chart" style="margin-top: 2em; border-top: 2px solid #CCF; padding-top: 1em;" ></div>
+					<%end%>
+				<% end %>
 				
 			</div>
 		<%end%>

@@ -220,7 +220,24 @@ class ApplicationController < ActionController::Base
     request.host_with_port
   end
 
-  protected
+  # Returns a sanitized int value based on the MONITORING_HISTORY_LIMIT config option
+  # This should be used instead of calling MONITORING_HISTORY_LIMIT directly
+  def monitoring_history_limit
+    default_recommendation = 5
+    
+    biocatalogue_max_limit = 15
+    biocatalogue_min_limit = 0
+    
+    return default_recommendation if MONITORING_HISTORY_LIMIT == -1
+    
+    return biocatalogue_min_limit if MONITORING_HISTORY_LIMIT <= biocatalogue_min_limit
+    return biocatalogue_max_limit if MONITORING_HISTORY_LIMIT >= biocatalogue_max_limit
+    
+    return MONITORING_HISTORY_LIMIT
+  end
+  helper_method :monitoring_history_limit
+
+protected
   
   def debug_messages
     BioCatalogue::Util.say ""
