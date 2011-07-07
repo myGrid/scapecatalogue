@@ -198,5 +198,14 @@ ExceptionNotifier.view_path = 'app/views/error'
 
 # ===============================================================
 
-
 WhiteListHelper.tags = %w(strong em b i p code pre tt output samp kbd var sub sup dfn cite big small address hr br div span h1 h2 h3 h4 h5 h6 ul ol li dt dd abbr acronym a img blockquote del ins fieldset legend table th td tr tbody)
+
+# ===============================================================
+# Configure global settings for the monitoring history
+# ---------------------------------------------------------------
+
+MONITORING_HISTORY_LIMIT = 5 unless defined?(MONITORING_HISTORY_LIMIT) 
+
+SHOW_MONITORING_GRAPH = true unless defined?(SHOW_MONITORING_GRAPH)
+
+
