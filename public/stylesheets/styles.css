@@ -1272,7 +1272,7 @@ body.sidebar-right #login_box {
 	margin: 0;
 }
 
-.listing_item, .disabled_test_listing_item { 
+.listing_item { 
 	margin-bottom: 1.2em;
 	padding: 0.4em 0.8em;
 	border: 1px solid #CCC;
@@ -3575,10 +3575,5 @@ a.globalise_param_link {
 .curator {
   background-color: #E1D8FF;
   color: #635F70;
-}
-
-
-.disabled_test_listing_item {
-	border: 2px solid #CC3333;
 }
 
