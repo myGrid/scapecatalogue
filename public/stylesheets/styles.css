@@ -1272,7 +1272,7 @@ body.sidebar-right #login_box {
 	margin: 0;
 }
 
-.listing_item { 
+.listing_item, .disabled_test_listing_item { 
 	margin-bottom: 1.2em;
 	padding: 0.4em 0.8em;
 	border: 1px solid #CCC;
@@ -1890,6 +1890,13 @@ ul.tabbernav li.tabberactive a:hover
 .vtabs_container .vtabs_tab_bar ul li a .name {
 	font-size: 108%;
 	font-weight: bold;
+}
+
+.vtabs_container .vtabs_tab_bar ul li a .grayed_name {
+
+	color: #333;
+
+	font-style: italic;
 }
 
 .vtabs_container .vtabs_tab_bar ul li a .detail {
@@ -3465,7 +3472,7 @@ a.globalise_param_link {
   font-weight: bold;
 }
 
-.operations_quick_browse_box .entry a {
+.operations_quick_browse_box .entry a, .grayed_entry a {
 	font-size: 93%;
 	vertical-align: middle;
 	margin: 0 0.4em;
@@ -3476,8 +3483,12 @@ a.globalise_param_link {
 	border: 1px dotted transparent;
 }
 
-.operations_quick_browse_box .entry a.active,
-.operations_quick_browse_box .entry a:hover {
+.grayed_entry a {
+  color: #888;	
+}
+
+.operations_quick_browse_box .entry a.active, .grayed_entry a.active,
+.operations_quick_browse_box .entry a:hover, .grayed_entry a:hover {
 	border: 1px dotted #CCC;
 	background-color: #DDE;
 }
@@ -3508,9 +3519,7 @@ a.globalise_param_link {
   background-color: transparent !important;
 }
 
-/* END styles for Archived items */
-
-.archived_status_box {
+.archived_status_box, {
 	color: #333333;
   border: 2px solid #CC3333; 
   background: #FFCCCC;
@@ -3530,6 +3539,8 @@ a.globalise_param_link {
 	font-weight: bolder;
 	letter-spacing: 1px;
 }
+
+/* END styles for Archived items */
 
 .p7menubar a {
   text-decoration: none;
@@ -3565,3 +3576,9 @@ a.globalise_param_link {
   background-color: #E1D8FF;
   color: #635F70;
 }
+
+
+.disabled_test_listing_item {
+	border: 2px solid #CC3333;
+}
+

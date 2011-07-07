@@ -11,9 +11,9 @@
 <div class="listings">
 	<% items.each do |st| %>
 	
-	<div class="listing_item">
+	<div class= <%= st.enabled? ? "listing_item" : "disabled_test_listing_item" %> >
 		
-		<div class=name>
+		<div class="name">
 			<%= link_to(display_name(st), service_test_path(st)) -%> 
 		</div>
 		<div>

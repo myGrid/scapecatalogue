@@ -20,12 +20,10 @@
 		</span>
 		|
 		<% service_tests_for_display(@service_tests).each do |st| -%>
-		 	<%if st.enabled? -%>
-				<span class="entry">
-					<%= link_to(display_name(st), st) -%>
-				</span>
-				|
-			<% end -%>
+			<span class= <%= st.enabled? ? "entry" : "grayed_entry" %> >
+				<%= link_to(display_name(st), st) -%>
+			</span>
+			|
 		<% end -%>
 	</div>
 	
@@ -34,8 +32,8 @@
 		<div id="tab-availability-checks" class="tabbertab">
     	 	<h3><%= "Availability Checks (#{service_tests_for_display(@url_monitor_service_tests).count})" -%></h3> 
       
-      <% if @service.archived? %>
-        <p class="none_text"> This service is archived.  No monitoring information is available. </p>
+  			<% if @service.archived? %>
+        		<p class="none_text"> This service is archived.  No monitoring information is available. </p>
 			<% elsif service_tests_for_display(@url_monitor_service_tests).empty? -%>
 				<p class="none_text"> No availability monitoring yet. Please check back later. </p>
 			<%else%>
@@ -59,8 +57,8 @@
 			</div>
 		</div>
 	
-    <% if @service.archived? %>
-      <p class="none_text"> This service is archived.  No monitoring information is available. </p>
+    	<% if @service.archived? %>
+      		<p class="none_text"> This service is archived.  No monitoring information is available. </p>
 		<% elsif service_tests_for_display(@test_script_service_tests).empty? -%>
 			<p class="none_text"> None available yet. Please check back later. </p>
 		<%else%>
