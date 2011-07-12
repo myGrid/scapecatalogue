@@ -85,9 +85,6 @@ class ServiceTestsController < ApplicationController
           monitoring_endpoint_annotation.value = new_endpoint
           monitoring_endpoint_annotation.save!
           
-          # delete test results
-          TestResult.delete(@service_test.test_result_ids)
-          
           @service_test.updated_at = Time.now
           @service_test.save!
         end
