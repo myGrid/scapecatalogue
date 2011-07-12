@@ -275,7 +275,6 @@ class RestService < ActiveRecord::Base
     @associated_service ||= Service.find_by_id(associated_service_id)
   end    
   
-
   # =========================================
   
   

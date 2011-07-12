@@ -422,6 +422,11 @@ class Service < ActiveRecord::Base
     return false
   end
   
+  def has_capacity_for_new_monitoring_endpoint?
+    anns = self.annotations_with_attribute("monitoring_endpoint")
+    return anns.empty? 
+  end
+
 protected
   
   def generate_unique_code

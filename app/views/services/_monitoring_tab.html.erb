@@ -32,6 +32,9 @@
 		<div id="tab-availability-checks" class="tabbertab">
     	 	<h3><%= "Availability Checks (#{service_tests_for_display(@url_monitor_service_tests).count})" -%></h3> 
       
+      		<br/>
+      		<%= add_monitoring_endpoint_by_popup_link(@service.service_version_instances.first, :class => "button_slim", :style => "margin:0.5em; margin-right:0.9em;") -%>
+      		
   			<% if @service.archived? %>
         		<p class="none_text"> This service is archived.  No monitoring information is available. </p>
 			<% elsif service_tests_for_display(@url_monitor_service_tests).empty? -%>
