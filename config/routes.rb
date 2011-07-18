@@ -31,6 +31,11 @@ ActionController::Routing::Routes.draw do |map|
     :action => 'potential_duplicate_operations_within_service', 
     :conditions => { :method => :get }
     
+  map.curation_reports_providers_without_services '/curation/reports/providers_without_services', 
+    :controller => 'curation', 
+    :action => 'providers_without_services', 
+    :conditions => { :method => :get }
+
   map.curation_reports_services_missing_annotations '/curation/reports/services_missing_annotations',
     :controller => 'curation',
     :action => 'services_missing_annotations',

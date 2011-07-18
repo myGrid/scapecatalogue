@@ -61,6 +61,16 @@ module BioCatalogue
         return services
       end
       
+      def self.providers_without_services
+        providers = []
+        
+        ServiceProvider.all.each do |p|
+          providers << p if p.service_deployments.empty?
+        end
+        
+        return providers
+      end
+      
     end
   end
 end
