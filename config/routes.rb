@@ -266,6 +266,8 @@ ActionController::Routing::Routes.draw do |map|
                              :check_updates => :post,
                              :archive => :post,
                              :unarchive => :post,
+                             :favourite => :post,
+                             :unfavourite => :post,
                              :activity => [ :get, :post ] }
                              
   map.resources :responsibility_requests,

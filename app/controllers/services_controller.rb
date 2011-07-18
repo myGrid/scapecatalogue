@@ -7,8 +7,10 @@
 class ServicesController < ApplicationController
   
   before_filter :disable_action, :only => [ :edit, :update ]
-  before_filter :disable_action_for_api, :except => [ :index, :show, :filters, :summary, :annotations, :deployments, :variants, :monitoring, :activity, :filtered_index ]
+  before_filter :disable_action_for_api, :except => [ :index, :show, :filters, :summary, :annotations, :deployments, :variants, :monitoring, :activity, :filtered_index, :favourite, :unfavourite ]
 
+  before_filter :login_or_oauth_required, :only => [ :destroy, :check_updates, :archive, :unarchive, :favourite, :unfavourite ]
+  
   before_filter :parse_filtered_index_params, :only => :filtered_index
   
   before_filter :parse_current_filters, :only => [ :index, :filtered_index ]
@@ -19,7 +21,11 @@ class ServicesController < ApplicationController
   
   before_filter :find_services, :only => [ :index, :filtered_index ]
   
-  before_filter :find_service, :only => [ :show, :edit, :update, :destroy, :categorise, :summary, :annotations, :deployments, :variants, :monitoring, :check_updates, :archive, :unarchive, :activity ]
+  before_filter :find_service, :only => [ :show, :edit, :update, :destroy, :categorise, :summary, :annotations, :deployments, :variants, :monitoring, :check_updates, :archive, :unarchive, :activity, :favourite, :unfavourite ]
+
+  before_filter :find_favourite, :only => [ :favourite, :unfavourite ]
+
+  before_filter :authorise, :only => [ :destroy, :check_updates, :archive, :unarchive, :favourite, :unfavourite ]
   
   before_filter :check_if_user_wants_to_categorise, :only => [ :show ]
   
@@ -31,8 +37,6 @@ class ServicesController < ApplicationController
   
   before_filter :set_listing_type_local, :only => [ :index ]
   
-  before_filter :login_or_oauth_required, :only => [ :destroy, :check_updates, :archive, :unarchive ]
-  before_filter :authorise, :only => [ :destroy, :check_updates, :archive, :unarchive ]
   
   # GET /services
   # GET /services.xml
@@ -251,6 +255,60 @@ class ServicesController < ApplicationController
     end
   end
  
+  def favourite
+    if @favourite
+      respond_to do |format|
+        format.html { disable_action }
+        format.json { error_to_back_or_home("Could not favourite service with ID #{params[:id]} since it is already favorited.", false, 407) }
+      end
+    else
+      new_favourite = Favourite.create(:favouritable_type => "Service", :favouritable_id => @service.id, :user_id => current_user.id)
+    
+      respond_to do |format|
+        format.html { disable_action }
+        format.json {
+          if new_favourite
+            render :json => {
+                      :success => {
+                        :message => "The service '#{@service.display_name}' has been successfully favourited.",
+                        :resource => service_url(@service)
+                      }
+                    }.to_json, :status => 201
+          else 
+            error_to_back_or_home("Could not favourite service with ID #{params[:id]}.", false, 408)
+          end
+        }
+      end
+    end  
+  end
+ 
+  def unfavourite
+    if @favourite
+      deleted_favourite = Favourite.destroy(@favourite.id)
+    
+      respond_to do |format|
+        format.html { disable_action }
+        format.json {
+          if deleted_favourite
+            render :json => {
+                      :success => {
+                        :message => "The service '#{@service.display_name}' has been successfully unfavourited.",
+                        :resource => service_url(@service)
+                      }
+                    }.to_json, :status => 205
+          else
+            error_to_back_or_home("Could not unfavourite service with ID #{params[:id]}.", false, 408)            
+          end
+        }
+      end
+    else
+      respond_to do |format|
+        format.html { disable_action }
+        format.json { error_to_back_or_home("Could not unfavourite service with ID #{params[:id]}.", false, 407) }
+      end
+    end
+  end
+
   protected
   
   def parse_sort_params
@@ -325,7 +383,19 @@ class ServicesController < ApplicationController
   end
   
   def find_service
-    @service = Service.find(params[:id])
+    begin
+      @service = Service.find(params[:id])
+    rescue
+      if is_api_request?
+        respond_to do |format|
+          format.json { error_to_back_or_home("Service with ID #{params[:id]} not found.", false, 404) }
+        end
+      end
+    end
+  end
+  
+  def find_favourite
+    @favourite = Favourite.find(:first, :conditions => { :favouritable_type => "Service", :favouritable_id => params[:id], :user_id => current_user.id })
   end
   
   def check_if_user_wants_to_categorise
