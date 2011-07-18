@@ -345,13 +345,12 @@ protected
     end
     
     respond_to do |format|
-      
-      if options[:back_first] && !session[:previous_url].blank?
+      if !options[:back_first].blank? && !session[:previous_url].blank? && session[:previous_url]!=request.env["REQUEST_URI"]
         format.html { redirect_to(session[:previous_url]) }
       else
         format.html { render "home/index", :status => options[:status] }
       end
-      
+
       if options[:forbidden]
         format.xml  { head :forbidden }
         format.json { head :forbidden }
@@ -362,7 +361,7 @@ protected
         format.xml  { render "api/errors", :status => options[:status] }
         format.json { render :json => { "errors" => messages }.to_json, :status => options[:status] }
         format.atom { render :atom => "", :status => options[:status] }
-      end
+      end      
     end
   end
 
