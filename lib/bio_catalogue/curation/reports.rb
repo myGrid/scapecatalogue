@@ -62,14 +62,10 @@ module BioCatalogue
       end
       
       def self.providers_without_services        
-        sql = "SELECT id 
-               FROM service_providers 
+        sql = "SELECT * FROM service_providers 
                WHERE id NOT IN (SELECT DISTINCT service_provider_id FROM service_deployments)"
         
-        provider_ids = ActiveRecord::Base.connection.select_all(sql)
-        provider_ids.map! { |p| p["id"] }
-        
-        providers = ServiceProvider.find(provider_ids)
+        providers = ServiceProvider.find_by_sql(sql)
         
         return providers
       end
