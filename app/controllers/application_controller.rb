@@ -20,16 +20,8 @@ class ApplicationController < ActionController::Base
   # Allow for SSL support
   include SslRequirement
   if ENABLE_SSL && Rails.env.production?
-    ssl_allowed :all
-    DEFAULT_PROTOCOL = 'https'
-  else
-    DEFAULT_PROTOCOL = 'http'
+    ssl_required :all
   end
-  
-  def default_protocol
-    DEFAULT_PROTOCOL
-  end
-  helper_method :default_protocol
   
   # ============================================
 
