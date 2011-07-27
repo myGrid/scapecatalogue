@@ -10,6 +10,7 @@ class ServiceProvider < ActiveRecord::Base
     index :name
   end
   
+  before_create :bypass_email_messaging_after_next_save
   after_save :mail_admins_if_required
   
   if ENABLE_TRASHING
@@ -207,7 +208,16 @@ class ServiceProvider < ActiveRecord::Base
   
 private
   
-  def mail_admins_if_required    
+  def bypass_email_messaging_after_next_save
+    @should_bypass_email_messaging = true
+  end
+  
+  def mail_admins_if_required
+    if @should_bypass_email_messaging
+      @should_bypass_email_messaging = false
+      return
+    end
+    
     # send emails to biocat admins
     if self.services.empty?
       recipients = []
