@@ -513,7 +513,7 @@ protected
   helper_method :generate_sort_url
   
   def is_sort_selected(sort_by, sort_order)
-    return params[:sort_by] == sort_by.downcase && params[:sort_order] == sort_order.downcase
+    return @sort_by == sort_by.downcase && @sort_order == sort_order.downcase
   end
   helper_method :is_sort_selected
   
