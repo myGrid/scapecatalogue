@@ -3519,7 +3519,7 @@ a.globalise_param_link {
   background-color: transparent !important;
 }
 
-.archived_status_box, {
+.archived_status_box {
 	color: #333333;
   border: 2px solid #CC3333; 
   background: #FFCCCC;
