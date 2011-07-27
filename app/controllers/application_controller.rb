@@ -174,7 +174,7 @@ class ApplicationController < ActionController::Base
         return thing.source == current_user
       when Service
         return c_id == thing.submitter_id.to_i
-      when Favourite
+      when Favourite, ServiceResponsible
         return c_id == thing.user_id
       else
         return false
