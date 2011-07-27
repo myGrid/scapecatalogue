@@ -40,8 +40,6 @@ class SoaplabServer < ActiveRecord::Base
                   
   
   
-  virtual_field_from_annotation_with_fallback :display_name, :name, "display_name"
-  
   # save the soap services from this server in
   # the database
   def save_services(current_user)

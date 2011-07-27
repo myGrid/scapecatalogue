@@ -125,7 +125,7 @@ ActionController::Routing::Routes.draw do |map|
                            :bulk_create => :post },
                          { :edit_popup => :post,
                            :download => :get,
-                           :change_attribute => :post },
+                           :promote_alternative_name => :post },
                          { :protocol => ROUTES_PROTOCOL })
   
   map.resources :annotation_attributes,

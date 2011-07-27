@@ -195,10 +195,6 @@ ActiveRecord::Schema.define(:version => 20101116144723) do
   add_index "favourites", ["favouritable_type", "favouritable_id"], :name => "favourites_favouritable_index"
   add_index "favourites", ["user_id"], :name => "favourites_user_id_index"
 
-  create_table "innodb_lock_monitor", :id => false, :force => true do |t|
-    t.integer "a"
-  end
-
   create_table "oauth_nonces", :force => true do |t|
     t.string   "nonce"
     t.integer  "timestamp"

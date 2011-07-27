@@ -194,24 +194,7 @@ protected
   end
     
   def process_post_save_custom_logic
-    if self.attribute_name.downcase == 'display_name'
-      
-      # TODO: check that you are not trying to add a display_name with a value that already exists in the form of 
-      # an alternative_name annotation.
-      
-      # Find all other similar annotations that have the 'display_name' attribute and "downgrade" them to 'alternative_name'
-      self.annotatable.annotations_with_attribute('display_name').each do |ann|
-        if ann.id != self.id
-          # These annotations are read only so fetch again to modify...
-          ann2 = Annotation.find_by_id(ann.id)
-          if ann2
-            ann2.attribute_name = "alternative_name"
-            ann2.save
-          end
-        end
-      end
-      
-    end
+    return true
   end
   
   def process_post_destroy_custom_logic

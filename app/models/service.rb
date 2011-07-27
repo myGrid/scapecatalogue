@@ -58,8 +58,6 @@ class Service < ActiveRecord::Base
                           INNER JOIN annotation_attributes ON annotations.attribute_id = annotation_attributes.id 
                           WHERE annotation_attributes.name = "tag" AND annotations.annotatable_type = "Service" AND annotations.annotatable_id = #{self.id}'
   
-  virtual_field_from_annotation_with_fallback :display_name, :name, "display_name"
-           
   before_validation_on_create :generate_unique_code
   
   attr_protected :unique_code

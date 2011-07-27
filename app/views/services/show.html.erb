@@ -112,21 +112,22 @@
 	<tr>
 		<td style="vertical-align: top;">
 			<div>
-				<% unless @service.display_name == @service.name -%>
+				<% unless @latest_version_instance.name == @service.name -%>
 					<span style="vertical-align: middle;">
-						<% if @latest_version_instance.class == SoapService %>
+						<% if @latest_version_instance.is_a? SoapService %>
 							<b>Specified Name (from WSDL): </b>
-						<% elsif @latest_version_instance.class == RestService %>
+						<% elsif @latest_version_instance.is_a? RestService %>
 							<b>Specified Name (by submitter): </b>
 						<% end %>
-						<%= h(@service.name) -%>
+						<%= h(@latest_version_instance.name) -%>
 					</span>
 					<span class="faded" style="vertical-align: middle; margin-left: 1em;"> | </span>
 				<% end %>
 				<span class="inline-block">
 					<%= render :partial => "annotations/name_aliases",
 										 :locals => { :annotatable => @service,
-																	:name_annotations => all_alternative_name_annotations_for_service(@service) } -%>
+																	:name_annotations => all_alternative_name_annotations_for_service(@service),
+                                  :show_promote_option => true } -%>
 				</span>
 			</div>
 				
