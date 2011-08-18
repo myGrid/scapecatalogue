@@ -159,7 +159,7 @@ class Service < ActiveRecord::Base
           INNER JOIN categories ON categories.id = annotations.value_id AND annotations.value_type = 'Category'
           WHERE annotation_attributes.name = 'category' 
             AND annotations.annotatable_type = 'Service' 
-            AND annotations.annotatable_id = '#{self.id}'"
+            AND annotations.annotatable_id = #{self.id}"
     
     results = ActiveRecord::Base.connection.select_all(sql)
     

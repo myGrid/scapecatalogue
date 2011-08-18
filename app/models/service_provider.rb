@@ -62,17 +62,14 @@ class ServiceProvider < ActiveRecord::Base
   # NOTE: this doesn't take into account tags on service deployment, 
   # and variants, ONLY the tags on the service.
   def tags_from_services
-    sql = [
-      "SELECT tags.name, tags.label, COUNT(*) AS count
-      FROM annotations
-      INNER JOIN annotation_attributes ON annotations.attribute_id = annotation_attributes.id
-      INNER JOIN tags ON tags.id = annotations.value_id AND annotations.value_type = 'Tag'
-      INNER JOIN services ON services.id = annotations.annotatable_id AND annotations.annotatable_type = 'Service'
-      INNER JOIN service_deployments ON service_deployments.service_id = services.id
-      WHERE annotation_attributes.name = 'tag' AND service_deployments.service_provider_id = ?
-      GROUP BY tags.id",
-      self.id
-    ]
+    sql = "SELECT tags.name, tags.label, COUNT(*) AS count
+          FROM annotations
+          INNER JOIN annotation_attributes ON annotations.attribute_id = annotation_attributes.id
+          INNER JOIN tags ON tags.id = annotations.value_id AND annotations.value_type = 'Tag'
+          INNER JOIN services ON services.id = annotations.annotatable_id AND annotations.annotatable_type = 'Service'
+          INNER JOIN service_deployments ON service_deployments.service_id = services.id
+          WHERE annotation_attributes.name = 'tag' AND service_deployments.service_provider_id = #{self.id}
+          GROUP BY tags.id"
     
     results = ActiveRecord::Base.connection.select_all(sql)
       
