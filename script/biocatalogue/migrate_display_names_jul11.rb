@@ -38,7 +38,7 @@ begin
       end
       
       unless obj.nil?
-        obj.name = a.value
+        obj.name = a.value_content
         obj.save!
         a.destroy
         count += 1
