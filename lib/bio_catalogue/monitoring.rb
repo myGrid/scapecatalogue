@@ -1,6 +1,6 @@
 # BioCatalogue: lib/bio_catalogue/monitoring.rb
 #
-# Copyright (c) 2009, University of Manchester, The European Bioinformatics 
+# Copyright (c) 2009-2011, University of Manchester, The European Bioinformatics 
 # Institute (EMBL-EBI) and the University of Southampton.
 # See license.txt for details
 
@@ -180,7 +180,7 @@ module BioCatalogue
       
       def self.update_monitor_for_annotation_and_service(ann, service)
         if from_trusted_source?(ann)
-          can_be_monitored = !Monitoring.pingable_url(ann.value).nil?
+          can_be_monitored = !Monitoring.pingable_url(ann.value_content).nil?
           
           monitor = UrlMonitor.find(:first , :conditions => ["parent_id= ? AND parent_type= ?", ann.id, ann.class.name ])
           
@@ -190,7 +190,7 @@ module BioCatalogue
             if mon
               begin
                 if mon.save!
-                  Rails.logger.debug("Created a new monitor for #{ann.send('value')}")
+                  Rails.logger.debug("Created a new monitor for #{ann.value_content}")
                 end
               rescue Exception => ex
                 Rails.logger.warn("Could not create url monitor")

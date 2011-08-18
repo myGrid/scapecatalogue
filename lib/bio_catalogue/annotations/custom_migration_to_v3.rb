@@ -1,0 +1,136 @@
+module Annotations
+  module Util
+    
+    # Overriding this from the Annotations plugin so that 
+    # we can have our own custom logic to migrate the 
+    # Annotations data to the v3 schema.
+    def self.migrate_annotations_to_v3
+      BioCatalogue::Util::say "Running custom logic to migrate the Annotations data to the v3 schema..."
+      
+      Annotation.record_timestamps = false
+      
+      Annotation.all.each do |ann|
+        begin
+          ann.transaction do
+            case ann.attribute_name.downcase
+              when 'tag'
+                Temp.migrate_tag(ann)
+              when 'category'
+                Temp.migrate_category(ann)
+              when 'rating.documentation'
+                ann.destroy
+              else
+                Temp.migrate_text(ann)
+            end
+          end
+        rescue Exception => ex
+          BioCatalogue::Util::yell "FAILED to migrate annotation with ID #{ann.id}. Error message: #{ex.message}"
+          raise ex  # TODO: remove in final code
+        end
+      end
+      
+      Annotation.record_timestamps = true
+    end
+    
+    
+    module Temp
+      TAG_NAMESPACES = { "http://www.mygrid.org.uk/ontology" => "mygrid-domain-ontology", 
+                         "http://www.mygrid.org.uk/mygrid-moby-service" => "mygrid-service-ontology" }.freeze
+      
+      def self.migrate_tag(ann)
+        namespace, term_keyword = self.split_ontology_term_uri(ann.old_value)
+        
+        tag = Tag.find_or_create_by_label_and_name(term_keyword, ann.old_value)
+        
+        # Set the right timestamps
+        tag.created_at = ann.created_at if (tag.created_at.blank? || ann.created_at < tag.created_at)
+        tag.updated_at = ann.created_at if (tag.updated_at.blank? || ann.created_at < tag.created_at)
+        tag.save!
+        
+        ann.value = tag
+        ann.old_value = nil
+        ann.save!
+        
+        self.remove_older_versions(ann)
+      end
+      
+      def self.migrate_category(ann)
+        cat = Category.find(ann.old_value)
+        
+        ann.value = cat
+        ann.old_value = nil
+        ann.save!
+        
+        self.remove_older_versions(ann)
+      end
+      
+      def self.migrate_text(ann)
+        val = TextValue.new
+        
+        # Handle versions
+        #
+        # NOTE: This will take a naive approach of assuming that
+        # only the 'old_value' field has been changed in the annotations
+        # table over time, nothing else!
+        
+        # Build up the TextValue from the versions
+        ann.versions.each do |v|
+          val.text = v.old_value
+          val.version_creator_id = v.version_creator_id
+          val.created_at = v.created_at unless val.created_at
+          val.updated_at = v.updated_at
+          val.save!
+        end
+        
+        # Assign new TextValue to Annotation
+        ann.value = val
+        ann.old_value = nil
+        ann.save!
+        
+        self.remove_older_versions(ann)
+      end
+      
+      def self.remove_older_versions(ann)
+        # Only keep the last version,
+        # deleting others, and resetting version
+        # numbers, and setting timestamps accordingly.
+        ann.versions(true).each do |version|
+          if version == ann.versions[-1]
+            # The one we want to keep
+            version.version = 1
+            version.version_creator_id = ann.version_creator_id
+            version.created_at = ann.created_at
+            version.updated_at = ann.created_at
+            version.save!
+          else
+            # Delete!
+            version.destroy
+          end
+        end
+        ann.version = 1
+        ann.save!    # This shouldn't result in a new version
+      end
+      
+      def self.is_ontology_term_uri?(tag_name)
+        return tag_name.starts_with?("<") && tag_name.ends_with?(">") && tag_name.include?("#") 
+      end
+      
+      def self.split_ontology_term_uri(tag_name)
+        namespace = ""
+        term_keyword = ""
+        if self.is_ontology_term_uri?(tag_name)
+          base_uri, term_keyword = tag_name.gsub(/[<>]/, "").split("#")
+          if TAG_NAMESPACES.has_key?(base_uri.downcase)
+            namespace = TAG_NAMESPACES[base_uri]
+          else
+            term_keyword = tag_name
+          end
+        else
+          term_keyword = tag_name
+        end
+        return [ namespace, term_keyword ]
+      end
+    end
+    
+  end
+end

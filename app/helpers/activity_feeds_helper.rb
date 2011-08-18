@@ -121,15 +121,12 @@ module ActivityFeedsHelper
             when 'create'
               annotatable = get_object_via_cache(item.annotatable_type, item.annotatable_id, object_cache)
               source = get_object_via_cache(item.source_type, item.source_id, object_cache)
-              value_to_display = item.value
+              value_to_display = item.value_content
               
               # Special case for annotation values for certain kinds of attributes
-              if item.attribute_name.downcase == "category"
-                value_to_display = Category.find(item.value).try(:name)
-              end
-              
               if item.attribute_name.downcase == "tag"
-                namespace, value_to_display = BioCatalogue::Tags.split_ontology_term_uri(item.value) 
+                namespace, fragment = BioCatalogue::Tags.split_ontology_term_uri(item.value.name)
+                value_to_display = item.value.label
               end
               
               unless value_to_display.blank? or item.attribute.nil? or annotatable.nil? or source.nil?

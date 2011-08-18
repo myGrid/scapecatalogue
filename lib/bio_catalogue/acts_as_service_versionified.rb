@@ -13,7 +13,7 @@ module BioCatalogue
     module ClassMethods
       def acts_as_service_versionified
         
-        acts_as_annotatable
+        acts_as_annotatable :name_field => :name
         
         has_one :service_version, 
                 :as => :service_versionified
@@ -131,7 +131,7 @@ module BioCatalogue
         desc = self.description
         
         if desc.blank?
-          desc = self.annotations_with_attribute("description").first.try(:value)
+          desc = self.annotations_with_attribute("description").first.try(:value_content)
         end
         
         return desc
@@ -146,7 +146,7 @@ module BioCatalogue
         doc_url = self.documentation_url
         
         if doc_url.blank?
-          doc_url = self.annotations_with_attribute("documentation_url").first.try(:value)
+          doc_url = self.annotations_with_attribute("documentation_url").first.try(:value_content)
         end
         
         return doc_url

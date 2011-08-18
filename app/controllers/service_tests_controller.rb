@@ -60,7 +60,7 @@ class ServiceTestsController < ApplicationController
   def update_monitoring_endpoint
     error = nil
     
-    error = "This service test cannot be updated because it not a custom endpoint monitor." unless @service_test.is_custom_endpoint_monitor? 
+    error = "This service test cannot be updated because it is not a custom endpoint monitor." unless @service_test.is_custom_endpoint_monitor? 
     monitoring_endpoint_annotation = @service_test.test.parent
     
     # sanitize user input
@@ -72,7 +72,7 @@ class ServiceTestsController < ApplicationController
       error = validate_endpoint_returning_error(@service, new_endpoint)
       
       if error.nil?
-        existing_endpoint = monitoring_endpoint_annotation.value
+        existing_endpoint = monitoring_endpoint_annotation.value_content
         error = "The service test could not be updated as the new endpoint was the same as the existing one." if existing_endpoint.downcase == new_endpoint.downcase
       end 
     end
@@ -82,7 +82,7 @@ class ServiceTestsController < ApplicationController
       begin
         ServiceTest.transaction do          
           # update url monitor
-          monitoring_endpoint_annotation.value = new_endpoint
+          monitoring_endpoint_annotation.value.ann_content = new_endpoint
           monitoring_endpoint_annotation.save!
           
           @service_test.updated_at = Time.now

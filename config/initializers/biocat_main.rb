@@ -44,6 +44,8 @@ require 'pp'
 require 'rexml/document'
 require 'acts_as_archived'
 
+require 'bio_catalogue/annotations/custom_migration_to_v3'
+
 # NOTE: 
 # all libraries within /lib/bio_catalogue will be loaded automatically by Rails (when accessed),
 # as long as they follow the convention. E.g.: the module BioCatalogue::ActsAsHuman
@@ -105,8 +107,6 @@ METADATA_COUNTS_DATA_CACHE_TIME = 60*60  # 60 minutes, in seconds.
 
 HOMEPAGE_ACTIVITY_FEED_ENTRIES_CACHE_TIME = 5*60  # 5 minutes, in seconds.
 
-TAGS_INDEX_CACHE_TIME = 5*60  # 5 minutes, in seconds.
-
 SEARCH_ITEMS_FROM_SOLR_CACHE_TIME = 30  # 30 seconds
 
 BOT_IGNORE_LIST = "Googlebot",
@@ -145,8 +145,8 @@ Annotations::Config.attribute_names_to_allow_duplicates.concat([ "tag",
                                                                  "rating.ease-of-use",
                                                                  "rating.documentation" ])
 
-Annotations::Config.value_restrictions.update({ "rating.documentation" => { :in => 1..5, :error_message => "Please provide a rating between 1 and 5" },
-                                                "test_xyz" => { :in => [ "fruit", "nut", "fibre" ], :error_message => "Please select a valid test_xyz" } })
+Annotations::Config.content_restrictions.update({ "rating.documentation" => { :in => 1..5, :error_message => "Please provide a rating between 1 and 5" },
+                                                  "test_xyz" => { :in => [ "fruit", "nut", "fibre" ], :error_message => "Please select a valid test_xyz" } })
 
 Annotations::Config.default_attribute_identifier_template = ANNOTATION_ATTRIBUTE_DEFAULT_IDENTIFIER_TEMPLATE
 Annotations::Config.attribute_name_transform_for_identifier = Proc.new { |name|

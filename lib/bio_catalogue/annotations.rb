@@ -10,7 +10,7 @@ module BioCatalogue
   module Annotations
     
     # List of annotation attributes that are considered "known" or important in the system
-    KNOWN_ANNOTATION_ATTRIBUTES = { :services => [ "category", "tag", "description", "display_name", "alternative_name", 
+    KNOWN_ANNOTATION_ATTRIBUTES = { :services => [ "category", "tag", "description", "alternative_name", 
                                                    "example_data", "documentation_url", "rating.documentation", "cost", "license",
                                                    "contact", "format", "example_endpoint", "data_schema" ].freeze,
                                     :providers => [ "display_name", "alternative_name", "website" ].freeze }.freeze
@@ -19,7 +19,7 @@ module BioCatalogue
     # (returned as symbols).
     # 
     # This should be in sync with the groups of metadata returned by the metadata_counts_for_service
-    # below (excluding :all, ofcourse).
+    # below (excluding :all).
     def self.metadata_sources
       [ :users, :registries, :providers ]
     end

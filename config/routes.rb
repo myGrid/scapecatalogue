@@ -125,8 +125,8 @@ ActionController::Routing::Routes.draw do |map|
                            :bulk_create => :post },
                          { :edit_popup => :post,
                            :download => :get,
-                           :promote_alternative_name => :post })
-                         # { :protocol => ROUTES_PROTOCOL }) TODO!
+                           :promote_alternative_name => :post },
+                         { :protocol => ROUTES_PROTOCOL })
   
   map.resources :annotation_attributes,
                 :member => { :annotations => :get },
@@ -140,7 +140,8 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :tags,
                 :only => [ :index, :show, :destroy ],
-                :collection => { :auto_complete => :get },
+                :collection => { :auto_complete => :get,
+                                 :destroy_taggings => :delete },
                 :requirements => { :protocol => ROUTES_PROTOCOL }
 
   # Ratings

@@ -38,7 +38,7 @@ parent_xml.tag! "summary",
   
   # <category> *
   service.annotations_with_attribute("category").each do |category_annotation|
-    unless (category = Category.find_by_id(category_annotation.value)).nil?
+    unless (category = category_annotation.value).nil? || category_annotation.value_type != 'Category'
       parent_xml.category category.name, xlink_attributes(uri_for_object(category), :title => xlink_title(category)), :resourceType => "Category"
     end
   end

@@ -103,24 +103,29 @@ class AnnotationsController < ApplicationController
   # PUT /annotations/1
   # PUT /annotations/1.xml
   def update
-    @annotation.value = params[:annotation][:value]
-    @annotation.version_creator_id = current_user.id
-    respond_to do |format|
-      if @annotation.save
-        flash[:notice] = 'Annotation was successfully updated.'
-
-        url_to_redirect_to = if @annotation.annotatable_type =~ /RestParameter|RestRepresentation/
-                               request.env["HTTP_REFERER"]
-                             else  
-                               url_for_web_interface(@annotation.annotatable) || home_url
-                             end
-
-        format.html { redirect_to url_to_redirect_to }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @annotation.errors, :status => :unprocessable_entity }
+    # Only allow update for certain kind of annotation values
+    if [ 'TextValue', 'NumberValue' ].include?(@annotation.value_type)
+      @annotation.value.ann_content = params[:annotation][:value]
+      @annotation.version_creator_id = current_user.id
+      respond_to do |format|
+        if @annotation.save
+          flash[:notice] = 'Annotation was successfully updated.'
+  
+          url_to_redirect_to = if @annotation.annotatable_type =~ /RestParameter|RestRepresentation/
+                                 request.env["HTTP_REFERER"]
+                               else  
+                                 url_for_web_interface(@annotation.annotatable) || home_url
+                               end
+  
+          format.html { redirect_to url_to_redirect_to }
+          format.xml  { head :ok }
+        else
+          format.html { render :action => "edit" }
+          format.xml  { render :xml => @annotation.errors, :status => :unprocessable_entity }
+        end
       end
+    else
+      error_to_back_or_home "Cannot perform this action!"
     end
   end
   
@@ -145,7 +150,7 @@ class AnnotationsController < ApplicationController
   end
   
   def download
-    send_data(@annotation.value, :type => "text/plain", :disposition => 'inline')
+    send_data(@annotation.value_content, :type => "text/plain", :disposition => 'inline')
   end
   
   def promote_alternative_name
@@ -153,7 +158,7 @@ class AnnotationsController < ApplicationController
       BioCatalogue::Auth.allow_user_to_curate_thing?(current_user, @annotation.annotatable)
       
       annotatable = @annotation.annotatable
-      annotatable.name = @annotation.value
+      annotatable.name = @annotation.val_content
       
       if annotatable.save && @annotation.destroy
         respond_to do |format|

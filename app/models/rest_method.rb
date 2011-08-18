@@ -27,7 +27,7 @@ class RestMethod < ActiveRecord::Base
   
   acts_as_archived
   
-  acts_as_annotatable
+  acts_as_annotatable :name_field => :endpoint_name
   
   validates_presence_of :rest_resource_id, 
                         :method_type
@@ -395,7 +395,7 @@ class RestMethod < ActiveRecord::Base
     desc = self.description
     
     if desc.blank?
-      desc = self.annotations_with_attribute("description").first.try(:value)
+      desc = self.annotations_with_attribute("description").first.try(:value_content)
     end
     
     return desc

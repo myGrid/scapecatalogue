@@ -455,7 +455,7 @@ module ApplicationHelper
       unless name_annotations.blank?
         output << content_tag(:p) do
           x = "<b>Alternate names:</b> "
-          x << name_annotations.map{|a| a.value}.to_sentence(:last_word_connector => ', ', :two_words_connector => ', ' )
+          x << name_annotations.map{|a| a.value_content}.to_sentence(:last_word_connector => ', ', :two_words_connector => ', ' )
           x
         end
       end
@@ -472,7 +472,8 @@ module ApplicationHelper
         output << content_tag(:p, :style => "margin-left: 20px;") do
           x = ''
           category_annotations.each do |ann|
-            category = Category.find_by_id(ann.value)
+            category = nil
+            category = ann.value if ann.value_type == "Category"
             unless category.nil?
               x << link_to(h(category.name), services_path(:cat => "[#{category.id}]"))
               x << "&nbsp;&nbsp;"
@@ -559,7 +560,7 @@ module ApplicationHelper
             x
           end
           output << content_tag(:div, :style => "margin-left: 20px;") do
-            annotation_prepare_description(ann.value) 
+            annotation_prepare_description(ann.value_content) 
           end
         end
       end
@@ -578,7 +579,7 @@ module ApplicationHelper
         output << content_tag(:p, :style => "margin-left: 20px;") do
           x = ''
           tag_annotations.each do |ann|
-             x << link_to(BioCatalogue::Tags.split_ontology_term_uri(ann.value)[1], BioCatalogue::Tags.generate_tag_show_uri(ann.value))
+             x << link_to(BioCatalogue::Tags.split_ontology_term_uri(ann.value_content)[1], BioCatalogue::Tags.generate_tag_show_uri(ann.value_content))
              x << "&nbsp;&nbsp;"
           end
           x
