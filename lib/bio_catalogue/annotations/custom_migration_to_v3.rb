@@ -25,7 +25,6 @@ module Annotations
           end
         rescue Exception => ex
           BioCatalogue::Util::yell "FAILED to migrate annotation with ID #{ann.id}. Error message: #{ex.message}"
-          raise ex  # TODO: remove in final code
         end
       end
       
