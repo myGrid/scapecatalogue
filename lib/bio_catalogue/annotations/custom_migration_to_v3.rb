@@ -81,12 +81,22 @@ module Annotations
           val.save!
         end
         
+        # Be defensive!
+        val.text = ann.old_value if val.text.blank?
+        
         # Assign new TextValue to Annotation
         ann.value = val
-        ann.old_value = nil
-        ann.save!
         
-        self.remove_older_versions(ann)
+        if TextValue.has_duplicate_annotation?(ann)
+          # Delete the existing annotation
+          ann.destroy
+        else
+          # Otherwise, save it with the new value
+          ann.old_value = nil
+          ann.save!
+          
+          self.remove_older_versions(ann)
+        end
       end
       
       def self.remove_older_versions(ann)
