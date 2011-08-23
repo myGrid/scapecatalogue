@@ -38,8 +38,6 @@ class Annotation < ActiveRecord::Base
     acts_as_trashable
   end
   
-  before_save :validate_doc_url
-  
   after_destroy :process_post_destroy_custom_logic
   
   if USE_EVENT_LOG
@@ -222,13 +220,4 @@ protected
     end
   end # generate_json_and_make_inline
   
-  def validate_doc_url
-    if self.attribute_name.downcase == "documentation_url"
-      return true if self.value_content.downcase.match(URI::regexp(%w(http https www)))
-      self.errors.add_to_base("url is not valid. Should start with http or https or www")
-      return false
-    end
-    return true
-  end
-
 end
