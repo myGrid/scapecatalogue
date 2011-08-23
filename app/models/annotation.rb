@@ -224,8 +224,8 @@ protected
   
   def validate_doc_url
     if self.attribute_name.downcase == "documentation_url"
-      return true if self.value_content.downcase.match(URI::regexp(%w(http https)))
-      self.errors.add_to_base("url is not valid. Should start with http or https ")
+      return true if self.value_content.downcase.match(URI::regexp(%w(http https www)))
+      self.errors.add_to_base("url is not valid. Should start with http or https or www")
       return false
     end
     return true
