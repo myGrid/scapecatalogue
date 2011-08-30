@@ -12,15 +12,20 @@ module Annotations
       Annotation.all.each do |ann|
         begin
           ann.transaction do
-            case ann.attribute_name.downcase
-              when 'tag'
-                Temp.migrate_tag(ann)
-              when 'category'
-                Temp.migrate_category(ann)
-              when 'rating.documentation'
-                ann.destroy
-              else
-                Temp.migrate_text(ann)
+            # Take this opportunity to do some cleanup of the data
+            if ann.annotatable.nil? or ann.source.nil? 
+              ann.destroy
+            else
+              case ann.attribute_name.downcase
+                when 'tag'
+                  Temp.migrate_tag(ann)
+                when 'category'
+                  Temp.migrate_category(ann)
+                when 'rating.documentation'
+                  ann.destroy
+                else
+                  Temp.migrate_text(ann)
+              end
             end
           end
         rescue Exception => ex
@@ -83,6 +88,8 @@ module Annotations
         
         # Be defensive!
         val.text = ann.old_value if val.text.blank?
+        val.created_at = ann.created_at if val.created_at.blank?
+        val.updated_at = ann.updated_at if val.updated_at.blank?
         
         # Assign new TextValue to Annotation
         ann.value = val

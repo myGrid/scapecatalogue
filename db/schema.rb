@@ -200,6 +200,10 @@ ActiveRecord::Schema.define(:version => 20110728111043) do
   add_index "favourites", ["favouritable_type", "favouritable_id"], :name => "favourites_favouritable_index"
   add_index "favourites", ["user_id"], :name => "favourites_user_id_index"
 
+  create_table "innodb_lock_monitor", :id => false, :force => true do |t|
+    t.integer "a"
+  end
+
   create_table "number_value_versions", :force => true do |t|
     t.integer  "number_value_id",    :null => false
     t.integer  "version",            :null => false
