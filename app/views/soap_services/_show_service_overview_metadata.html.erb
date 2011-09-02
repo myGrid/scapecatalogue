@@ -9,10 +9,26 @@
 %>
 
 <p>
-	<b>WSDL Location:</b>
+	<b>WSDL Location:
+    <% if BioCatalogue::Auth.allow_user_to_curate_thing?(current_user, service_version_instance) %>
+        <span style="font-weight: normal; margin-left: 1.5em;">
+        (
+        <%= link_to_function("edit" + expand_image("0.5em"), :id => 'wsdl_update_edit_link', :style => "text-decoration: none;") do |page|
+            page.toggle 'wsdl_update_edit_link', 'wsdl_update_cancel_link'
+        end -%>
+
+        <%= link_to_function("cancel" + collapse_image("0.5em"), :id => 'wsdl_update_cancel_link', :style => "text-decoration: none;  display:none;") do |page|
+            page.toggle 'wsdl_update_edit_link', 'wsdl_update_cancel_link'
+        end -%>
+        )
+        </span>
+    <% end %>
+    </b>
 	<br/>
 	<%= link_to(h(service_version_instance.wsdl_location), service_version_instance.wsdl_location, :popup => true) -%>
 	<span style="font-size: 85%; margin-left: 2em;">(<%= link_to "download last cached WSDL file", latest_wsdl_soap_service_url(service_version_instance), :popup => true -%>)</span>
+
+
 
     <% old_wsdls = [] %>
     <% service_version_instance.wsdl_files.each do |wf|

@@ -289,7 +289,11 @@ class SoapServicesController < ApplicationController
   def latest_wsdl
     send_data(@soap_service.latest_wsdl_contents, :type => "text/xml", :disposition => 'inline')
   end
-  
+
+  def update_wsdl_location
+    
+  end
+
 protected # ========================================
   
   def find_soap_service

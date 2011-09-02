@@ -263,7 +263,8 @@ ActionController::Routing::Routes.draw do |map|
                 :member => { :annotations => :get,
                              :operations => :get,
                              :deployments => :get,
-                             :latest_wsdl => :get },
+                             :latest_wsdl => :get,
+                             :update_wsdl_location => :put },
                 :requirements => { :protocol => ROUTES_PROTOCOL }
 
   map.resources :soap_operations,
