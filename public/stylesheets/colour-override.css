@@ -4,7 +4,7 @@ html, body, .green_box, .green_highlight, #wrapper, #login_links .inner, #login_
 .pagination a:hover, .pagination a:focus, .pagination .page_info, ul.tabbernav li a, .vtabs_container .vtabs_tab_bar ul li a,
 .box_info, .biocat_green, .redbox_contents .head, .rcontainer > .rtop > div, .rcontainer > .rbottom > div, .rcontainer > .rcontain,
 .vtabs_container .vtabs_tab_bar ul li a:hover, ul.tabbernav li a:hover, #home_content .section_box, #login_box {
-  background-color: #CCE9F7; /* Main colour - Light */
+  background-color: #d2f1f8; /* Main colour - Light */
 }
 
 #header_container {
