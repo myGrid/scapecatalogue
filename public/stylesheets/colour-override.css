@@ -8,12 +8,12 @@ html, body, .green_box, .green_highlight, #wrapper, #login_links .inner, #login_
 }
 
 #header_container {
-  background-color: #8AD3F7; /* Header colour - Slightly Darker */
+  background-color: #58aacc; /* Header colour - Slightly Darker */
 }
 
 .vtabs_container .vtabs_tab_bar ul li a:hover,
 ul.tabbernav li a:hover {
-  background-color: #6FBFE7; /* Secondary colour - used on tabs - Slightly Darker still */
+  background-color: #58aacc; /* Secondary colour - used on tabs - Slightly Darker still */
 }
 
 /*
