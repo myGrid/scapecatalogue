@@ -52,5 +52,11 @@ class HomeController < ApplicationController
       format.atom # status_changes.atom.builder
     end
   end
+
+  def executing_web_services
+    respond_to do |format|
+      format.html # executing_web_services.html.erb
+    end
+  end
   
 end

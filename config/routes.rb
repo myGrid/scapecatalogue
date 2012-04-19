@@ -209,6 +209,7 @@ ActionController::Routing::Routes.draw do |map|
   map.activity_feed '/index.:format', :controller => 'home', :action => 'index', :requirements => { :protocol => ROUTES_PROTOCOL }
   map.status_changes_feed '/status_changes.:format', :controller => 'home', :action => 'status_changes', :requirements => { :protocol => ROUTES_PROTOCOL }
   map.latest '/latest', :controller => 'home', :action => 'latest', :requirements => { :protocol => ROUTES_PROTOCOL }
+  map.executing_web_services '/executing_web_services', :controller => 'home', :action => 'executing_web_services', :requirements => { :protocol => ROUTES_PROTOCOL }
 
   map.service_provider_auto_complete 'service_providers/auto_complete', :controller => 'service_providers', :action => 'auto_complete', :conditions => { :method => :get }, :requirements => { :protocol => ROUTES_PROTOCOL }
 
